@@ -8,6 +8,9 @@ spending for fiscal year 2025: **6,639,176 contract actions** totalling
 Every figure in this repository is reconciled against the source data. Nothing is
 estimated, modelled or imputed.
 
+![Executive brief](docs/images/01-executive-brief.png)
+
+
 ---
 
 ## 1. Business problem
@@ -260,6 +263,46 @@ the PBIR schema so the design system is applied consistently rather than by hand
 | 06 | Geography | Where the contracted work is performed |
 | 07 | Award explorer | Row-level evidence; drill-through target |
 | 08 | Method & sources | Provenance, grain, quality decisions, limitations |
+
+### Market structure
+Only 41% of FY2025 obligations went onto new awards. The rest flowed through
+modifications, option exercises and funding actions on contracts signed in earlier years.
+
+![Market structure](docs/images/02-market-structure.png)
+
+### Agencies
+Defense sub-agencies dominate the dollars, but the Defense Logistics Agency shows a
+completely different pattern: 3.9 million actions for $55.9 bn, against the Navy's
+213 thousand actions for $176.6 bn.
+
+![Agencies](docs/images/03-agencies.png)
+
+### Contractors
+104,476 recipients were paid, but ten corporate groups took 28.7% of the money.
+
+![Contractors](docs/images/04-contractors.png)
+
+### Categories and competition
+Services take $426.6 bn against $305.9 bn of products and $60.7 bn of R&D. Two thirds of
+the money is competed — but $214.1 bn is placed without competition at all.
+
+![Categories](docs/images/05-categories.png)
+
+### Geography
+Virginia alone absorbs $120.6 bn, more than the next two states combined.
+
+![Geography](docs/images/06-geography.png)
+
+### Award explorer
+The 823 contract actions of $100 m or more, and the drill-through target for any
+recipient or department elsewhere in the report.
+
+![Award explorer](docs/images/07-award-explorer.png)
+
+### Method and sources
+Provenance, grain, quality decisions and limitations, stated inside the report itself.
+
+![Method and sources](docs/images/08-method-and-sources.png)
 
 **Design direction** — a dark editorial system: layered neutrals, hairline separators
 instead of shadowed cards, a single brass accent reserved for the primary value in any
