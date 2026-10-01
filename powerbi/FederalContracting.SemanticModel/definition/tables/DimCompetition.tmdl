@@ -1,0 +1,51 @@
+/// Junk dimension: how the action was competed, solicited and set aside.
+table DimCompetition
+	lineageTag: 93ec27ae-398a-4224-8082-4df8a77545e6
+
+	column CompetitionKey
+		dataType: int64
+		isHidden
+		isKey
+		isAvailableInMdx: false
+		lineageTag: ad65aa5d-7e42-4306-b2be-90768bb1ecdf
+		summarizeBy: none
+		sourceColumn: CompetitionKey
+
+	column 'Extent Competed'
+		dataType: string
+		lineageTag: afad5667-9849-45fe-89b8-71931417e6e1
+		summarizeBy: none
+		sourceColumn: Extent Competed
+
+	column 'Solicitation Procedure'
+		dataType: string
+		lineageTag: 9ae8f9f6-9df6-4db8-8e10-755f702fdd56
+		summarizeBy: none
+		sourceColumn: Solicitation Procedure
+
+	column 'Set-Aside Type'
+		dataType: string
+		lineageTag: e86740de-4693-4591-8d35-1df84ceec7d1
+		summarizeBy: none
+		sourceColumn: Set-Aside Type
+
+	column 'Competition Status'
+		dataType: string
+		lineageTag: ecb266a4-6518-4670-9b60-a206d4304292
+		summarizeBy: none
+		sourceColumn: Competition Status
+
+	column 'Set-Aside Flag'
+		dataType: string
+		lineageTag: ebc1a5b7-87ce-4cc8-a35d-6d78cf489d0d
+		summarizeBy: none
+		sourceColumn: Set-Aside Flag
+
+	partition DimCompetition = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\DimCompetition.parquet"))
+				in
+				    Source
+

@@ -1,0 +1,57 @@
+/// Junk dimension: award or IDV, award type, IDV type and pricing arrangement.
+table DimContractType
+	lineageTag: 4f6b083c-8f1c-44c7-9a81-d6fcfc54c080
+
+	column ContractTypeKey
+		dataType: int64
+		isHidden
+		isKey
+		isAvailableInMdx: false
+		lineageTag: 4552ea1b-ac30-40eb-beb7-4f9f9dc18e6d
+		summarizeBy: none
+		sourceColumn: ContractTypeKey
+
+	column 'Award or IDV'
+		dataType: string
+		lineageTag: f947bc4a-a972-4002-9599-e8811ba9fa59
+		summarizeBy: none
+		sourceColumn: Award or IDV
+
+	column 'Award Type'
+		dataType: string
+		lineageTag: 20a3aba9-0ee5-482e-a7bb-fe72b4afb35f
+		summarizeBy: none
+		sourceColumn: Award Type
+
+	column 'IDV Type'
+		dataType: string
+		lineageTag: 1427f8f5-1e41-4c70-8a9f-ef7586741155
+		summarizeBy: none
+		sourceColumn: IDV Type
+
+	column 'Pricing Type'
+		dataType: string
+		lineageTag: 9107bcff-f897-4dde-9a7e-876ae293170a
+		summarizeBy: none
+		sourceColumn: Pricing Type
+
+	column 'Parent Vehicle Type'
+		dataType: string
+		lineageTag: ae0efe87-4b15-4ede-b963-e0e01ad7ba38
+		summarizeBy: none
+		sourceColumn: Parent Vehicle Type
+
+	column 'Pricing Family'
+		dataType: string
+		lineageTag: adbfc5ce-b3c3-4cf0-a089-05f348a280f5
+		summarizeBy: none
+		sourceColumn: Pricing Family
+
+	partition DimContractType = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\DimContractType.parquet"))
+				in
+				    Source
+

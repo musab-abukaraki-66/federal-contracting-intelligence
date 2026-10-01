@@ -1,0 +1,51 @@
+/// Product and Service Codes present in FY2025 contract transactions, with the official product / service / R&D grouping.
+table DimPsc
+	lineageTag: 6e60700b-12cf-4e94-b45f-272d18f00221
+
+	column PscKey
+		dataType: int64
+		isHidden
+		isKey
+		isAvailableInMdx: false
+		lineageTag: a1b8b9bf-02d9-4c93-8f19-894e83e43dc3
+		summarizeBy: none
+		sourceColumn: PscKey
+
+	column 'PSC Code'
+		dataType: string
+		lineageTag: 7e93ac93-e9a3-4c42-9012-c413c371c04c
+		summarizeBy: none
+		sourceColumn: PSC Code
+
+	column 'PSC Description'
+		dataType: string
+		lineageTag: a3fa08fd-6a33-48ea-954c-79c48c8b79f5
+		summarizeBy: none
+		sourceColumn: PSC Description
+
+	column 'PSC Group Code'
+		dataType: string
+		lineageTag: 898a61c9-ac21-47e8-9524-f3fc869de3c6
+		summarizeBy: none
+		sourceColumn: PSC Group Code
+
+	column 'PSC Category'
+		dataType: string
+		lineageTag: 7f4f45ac-3b7d-4c69-b003-d16fa08cac1b
+		summarizeBy: none
+		sourceColumn: PSC Category
+
+	column 'PSC Code & Description'
+		dataType: string
+		lineageTag: aee0d039-d9b8-40b4-a514-5fa54e2acc89
+		summarizeBy: none
+		sourceColumn: PSC Code & Description
+
+	partition DimPsc = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\DimPsc.parquet"))
+				in
+				    Source
+

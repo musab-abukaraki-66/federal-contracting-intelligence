@@ -1,0 +1,65 @@
+/// Awarding and funding organisations at agency / sub-agency grain. Abbreviations joined from the USAspending toptier_agencies reference.
+table DimAgency
+	lineageTag: 89cbc920-5f1e-48f3-a7cb-406e73205ea3
+
+	column AgencyKey
+		dataType: int64
+		isHidden
+		isKey
+		isAvailableInMdx: false
+		lineageTag: a417d8a5-9da7-4f51-88ef-74b9c7102fca
+		summarizeBy: none
+		sourceColumn: AgencyKey
+
+	column 'Agency Code'
+		dataType: string
+		isHidden
+		lineageTag: b2c664e5-2348-42c2-a21b-afd0e26f3a27
+		summarizeBy: none
+		sourceColumn: Agency Code
+
+	column Agency
+		dataType: string
+		lineageTag: 63b90e1c-d380-4df5-938f-db2637153297
+		summarizeBy: none
+		sourceColumn: Agency
+
+	column 'Agency Abbreviation'
+		dataType: string
+		lineageTag: 4d30cb3e-d893-4eba-893e-f961ca197475
+		summarizeBy: none
+		sourceColumn: Agency Abbreviation
+
+	column 'Agency Short'
+		dataType: string
+		lineageTag: 85097e15-27df-4f3c-8da6-be50dd467ac0
+		summarizeBy: none
+		sourceColumn: Agency Short
+
+	column 'Sub-Agency Code'
+		dataType: string
+		isHidden
+		lineageTag: d8e352e7-7126-4de4-9680-efd6b8fb4056
+		summarizeBy: none
+		sourceColumn: Sub-Agency Code
+
+	column Sub-Agency
+		dataType: string
+		lineageTag: bdbed869-db1b-41d5-863b-4f32ea6027c5
+		summarizeBy: none
+		sourceColumn: Sub-Agency
+
+	column 'Agency / Sub-Agency'
+		dataType: string
+		lineageTag: b0ee38dd-4118-4489-94ba-64fc841e246c
+		summarizeBy: none
+		sourceColumn: Agency / Sub-Agency
+
+	partition DimAgency = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\DimAgency.parquet"))
+				in
+				    Source
+

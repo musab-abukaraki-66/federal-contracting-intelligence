@@ -1,0 +1,54 @@
+/// Where the contracted work is performed. IDV rows carry no performance location and are labelled 'Not applicable (IDV)'.
+table DimPlaceOfPerformance
+	lineageTag: 9f4eab6e-f9c5-4d2d-81b4-b45a9c9c9c23
+
+	column PlaceKey
+		dataType: int64
+		isHidden
+		isKey
+		isAvailableInMdx: false
+		lineageTag: bae35e3e-2adb-485f-9f66-cfb7701a932e
+		summarizeBy: none
+		sourceColumn: PlaceKey
+
+	column 'Performance Country'
+		dataType: string
+		lineageTag: b16116a2-4c4c-45b3-9c6d-d93d19ca76ed
+		dataCategory: Country
+		summarizeBy: none
+		sourceColumn: Performance Country
+
+	column 'Performance State'
+		dataType: string
+		lineageTag: 63aa3cd6-4394-4567-a65f-63ec910acc2d
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: Performance State
+
+	column 'Performance County'
+		dataType: string
+		lineageTag: a7addce0-1d6e-4c90-bc38-3a7c4db0b0d1
+		dataCategory: County
+		summarizeBy: none
+		sourceColumn: Performance County
+
+	column 'Performance Congressional District'
+		dataType: string
+		lineageTag: caf996b4-b985-4029-9589-47c6c9e8ad6a
+		summarizeBy: none
+		sourceColumn: Performance Congressional District
+
+	column 'Performance Region'
+		dataType: string
+		lineageTag: 714a0f42-2b37-4e23-9204-5ec8d5fa2837
+		summarizeBy: none
+		sourceColumn: Performance Region
+
+	partition DimPlaceOfPerformance = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\DimPlaceOfPerformance.parquet"))
+				in
+				    Source
+

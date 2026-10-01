@@ -1,0 +1,181 @@
+/// One row per prime contract transaction (contract action) reported to FPDS for fiscal year 2025.
+table FactContractTransactions
+	lineageTag: a0fcda43-9453-401f-a03b-e90053782f4c
+
+	column DateKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: f2f3c55c-fde3-46c0-9e11-e2777fd022fa
+		summarizeBy: none
+		sourceColumn: DateKey
+
+	column AgencyKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: 8cb87399-fef4-46ec-9f65-9992bcd5c34d
+		summarizeBy: none
+		sourceColumn: AgencyKey
+
+	column FundingAgencyKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: c162c9b4-63a4-4f7b-8841-c2d772aa136a
+		summarizeBy: none
+		sourceColumn: FundingAgencyKey
+
+	column RecipientKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: 368f612c-a52c-4d72-a003-36e76faf4284
+		summarizeBy: none
+		sourceColumn: RecipientKey
+
+	column AwardKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: a319779f-9553-473f-be66-148441fe9574
+		summarizeBy: none
+		sourceColumn: AwardKey
+
+	column NaicsKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: f9916475-46fa-4b13-a5ad-1d1835a6d365
+		summarizeBy: none
+		sourceColumn: NaicsKey
+
+	column PscKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: 9ffc6259-4790-4d92-bd84-c743dd793979
+		summarizeBy: none
+		sourceColumn: PscKey
+
+	column CompetitionKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: db8e28de-109b-4064-a930-db992faa7954
+		summarizeBy: none
+		sourceColumn: CompetitionKey
+
+	column ContractTypeKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: d9b27639-d398-4007-b08e-b18f1acf9d59
+		summarizeBy: none
+		sourceColumn: ContractTypeKey
+
+	column ActionTypeKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: bc165128-7ee6-4963-bc39-088fed57bf54
+		summarizeBy: none
+		sourceColumn: ActionTypeKey
+
+	column PlaceKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: 46b2d701-0527-4f22-a839-872a39331f8e
+		summarizeBy: none
+		sourceColumn: PlaceKey
+
+	column Obligation
+		dataType: decimal
+		isHidden
+		formatString: \$#,0
+		isAvailableInMdx: false
+		lineageTag: 1178f8a9-d5c4-4f08-a6fe-f9441e2a2345
+		summarizeBy: sum
+		sourceColumn: Obligation
+
+	column 'Offers Received'
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: b64104dd-78b1-499a-b02c-cb39014b478b
+		summarizeBy: none
+		sourceColumn: Offers Received
+
+	column SizeBandKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: 264260c8-9890-4eb7-b8d8-70669810e4b3
+		summarizeBy: none
+		sourceColumn: SizeBandKey
+
+	partition 'Fact p01' = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\FactContractTransactions\part_01.parquet"))
+				in
+				    Source
+
+	partition 'Fact p02' = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\FactContractTransactions\part_02.parquet"))
+				in
+				    Source
+
+	partition 'Fact p03' = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\FactContractTransactions\part_03.parquet"))
+				in
+				    Source
+
+	partition 'Fact p04' = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\FactContractTransactions\part_04.parquet"))
+				in
+				    Source
+
+	partition 'Fact p05' = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\FactContractTransactions\part_05.parquet"))
+				in
+				    Source
+
+	partition 'Fact p06' = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\FactContractTransactions\part_06.parquet"))
+				in
+				    Source
+
+	partition 'Fact p07' = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\FactContractTransactions\part_07.parquet"))
+				in
+				    Source
+
+	partition 'Fact p08' = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\FactContractTransactions\part_08.parquet"))
+				in
+				    Source
+

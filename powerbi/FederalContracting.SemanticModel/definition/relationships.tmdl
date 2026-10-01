@@ -1,0 +1,49 @@
+relationship Fact_Date
+	fromColumn: FactContractTransactions.DateKey
+	toColumn: DimDate.DateKey
+
+relationship Fact_AwardingAgency
+	fromColumn: FactContractTransactions.AgencyKey
+	toColumn: DimAgency.AgencyKey
+
+relationship Fact_FundingAgency
+	isActive: false
+	fromColumn: FactContractTransactions.FundingAgencyKey
+	toColumn: DimAgency.AgencyKey
+
+relationship Fact_Recipient
+	fromColumn: FactContractTransactions.RecipientKey
+	toColumn: DimRecipient.RecipientKey
+
+relationship Fact_Award
+	fromColumn: FactContractTransactions.AwardKey
+	toColumn: DimAward.AwardKey
+
+relationship Fact_Naics
+	fromColumn: FactContractTransactions.NaicsKey
+	toColumn: DimNaics.NaicsKey
+
+relationship Fact_Psc
+	fromColumn: FactContractTransactions.PscKey
+	toColumn: DimPsc.PscKey
+
+relationship Fact_Competition
+	fromColumn: FactContractTransactions.CompetitionKey
+	toColumn: DimCompetition.CompetitionKey
+
+relationship Fact_ContractType
+	fromColumn: FactContractTransactions.ContractTypeKey
+	toColumn: DimContractType.ContractTypeKey
+
+relationship Fact_ActionType
+	fromColumn: FactContractTransactions.ActionTypeKey
+	toColumn: DimActionType.ActionTypeKey
+
+relationship Fact_Place
+	fromColumn: FactContractTransactions.PlaceKey
+	toColumn: DimPlaceOfPerformance.PlaceKey
+
+relationship Fact_ActionSize
+	fromColumn: FactContractTransactions.SizeBandKey
+	toColumn: DimActionSize.SizeBandKey
+

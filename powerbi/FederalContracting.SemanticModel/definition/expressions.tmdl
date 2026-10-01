@@ -1,0 +1,8 @@
+/// Folder holding the curated Parquet star schema.
+/// Set this parameter to your local 'data' folder after cloning:
+/// Home > Transform data > Edit parameters > DataFolder
+expression DataFolder = "<PROJECT_ROOT>\02_PowerBI_Ready\data" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 049446a1-d9a4-410d-af0d-ed820e9f7058
+
+	annotation PBI_ResultType = Text
+

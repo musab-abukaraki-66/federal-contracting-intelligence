@@ -1,0 +1,33 @@
+/// What kind of contract action the transaction represents. Blank FPDS action types are labelled 'Base award'.
+table DimActionType
+	lineageTag: 250ccecc-eef3-45f1-a0fc-7b778f8b9b16
+
+	column ActionTypeKey
+		dataType: int64
+		isHidden
+		isKey
+		isAvailableInMdx: false
+		lineageTag: 522c83cf-1f3a-4492-b28e-b19e6e0030ab
+		summarizeBy: none
+		sourceColumn: ActionTypeKey
+
+	column 'Action Type'
+		dataType: string
+		lineageTag: 48f7e70d-76a9-4bce-a8c9-6e118fc3c481
+		summarizeBy: none
+		sourceColumn: Action Type
+
+	column 'Action Class'
+		dataType: string
+		lineageTag: 35b1fe53-0634-4765-bdaf-e401dcf510c3
+		summarizeBy: none
+		sourceColumn: Action Class
+
+	partition DimActionType = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\DimActionType.parquet"))
+				in
+				    Source
+

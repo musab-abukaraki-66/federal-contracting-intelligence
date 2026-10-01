@@ -1,0 +1,35 @@
+/// Size bands for a single contract action, by obligated amount.
+table DimActionSize
+	lineageTag: ad570c2e-23d0-4079-ba03-4e04f265e214
+
+	column SizeBandKey
+		dataType: int64
+		isHidden
+		isKey
+		isAvailableInMdx: false
+		lineageTag: 136afa19-1d5c-433b-8962-ff416eaf4b7e
+		summarizeBy: none
+		sourceColumn: SizeBandKey
+
+	column 'Action Size Band'
+		dataType: string
+		lineageTag: c4015346-bde5-4919-98d6-7de6a0bfa404
+		summarizeBy: none
+		sourceColumn: Action Size Band
+		sortByColumn: 'Action Size Sort'
+
+	column 'Action Size Sort'
+		dataType: string
+		isHidden
+		lineageTag: daf646b2-850d-4195-8759-c7136a69a659
+		summarizeBy: none
+		sourceColumn: Action Size Sort
+
+	partition DimActionSize = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\DimActionSize.parquet"))
+				in
+				    Source
+

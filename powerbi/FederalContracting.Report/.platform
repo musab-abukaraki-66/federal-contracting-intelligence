@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Federal Contracting Intelligence"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "a38d5b64-4f1e-49f2-8c0a-9d7e2b1c6f33"
+  }
+}

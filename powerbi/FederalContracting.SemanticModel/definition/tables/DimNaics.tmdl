@@ -1,0 +1,79 @@
+/// North American Industry Classification System codes present in FY2025 contract transactions.
+table DimNaics
+	lineageTag: e49aac29-42a7-4374-972a-0f0be608ec4c
+
+	column NaicsKey
+		dataType: int64
+		isHidden
+		isKey
+		isAvailableInMdx: false
+		lineageTag: 69e2bd25-f714-4224-b9ad-ec854970e9ef
+		summarizeBy: none
+		sourceColumn: NaicsKey
+
+	column 'NAICS Code'
+		dataType: string
+		lineageTag: bc63d99e-e51f-47c0-a768-a3b701da472f
+		summarizeBy: none
+		sourceColumn: NAICS Code
+
+	column 'NAICS Industry'
+		dataType: string
+		lineageTag: 673e3fd1-f498-4f5b-ae0f-c4079ed7f9fa
+		summarizeBy: none
+		sourceColumn: NAICS Industry
+
+	column 'NAICS Sector Code'
+		dataType: string
+		lineageTag: 558616f6-9983-4199-b1f0-cc280aaa322c
+		summarizeBy: none
+		sourceColumn: NAICS Sector Code
+
+	column 'NAICS Code & Industry'
+		dataType: string
+		lineageTag: e677c128-b033-469b-9f4a-7f597db38596
+		summarizeBy: none
+		sourceColumn: NAICS Code & Industry
+
+	/// Official NAICS 2-digit sector name. Calculated over 1,141 dimension rows, so storage cost is negligible.
+	column 'NAICS Sector' =
+			SWITCH (
+			    DimNaics[NAICS Sector Code],
+			    "11", "Agriculture, forestry & fishing",
+			    "21", "Mining, quarrying, oil & gas",
+			    "22", "Utilities",
+			    "23", "Construction",
+			    "31", "Manufacturing",
+			    "32", "Manufacturing",
+			    "33", "Manufacturing",
+			    "42", "Wholesale trade",
+			    "44", "Retail trade",
+			    "45", "Retail trade",
+			    "48", "Transportation & warehousing",
+			    "49", "Transportation & warehousing",
+			    "51", "Information",
+			    "52", "Finance & insurance",
+			    "53", "Real estate & leasing",
+			    "54", "Professional, scientific & technical",
+			    "55", "Management of companies",
+			    "56", "Administrative & support services",
+			    "61", "Educational services",
+			    "62", "Health care & social assistance",
+			    "71", "Arts, entertainment & recreation",
+			    "72", "Accommodation & food services",
+			    "81", "Other services",
+			    "92", "Public administration",
+			    "Not recorded"
+			)
+		dataType: string
+		lineageTag: 1daf5c98-4f82-443e-acd3-3b18236986c6
+		summarizeBy: none
+
+	partition DimNaics = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\DimNaics.parquet"))
+				in
+				    Source
+
