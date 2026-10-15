@@ -1,0 +1,123 @@
+/// Fiscal calendar for FY2025 (2024-10-01 to 2025-09-30).
+table DimDate
+	lineageTag: 549b8d58-ac5a-4d37-a6e1-5d366d809470
+	dataCategory: Time
+
+	column DateKey
+		dataType: int64
+		isHidden
+		isKey
+		isAvailableInMdx: false
+		lineageTag: d733ce01-260b-45ec-9df7-bf19ab283b62
+		summarizeBy: none
+		sourceColumn: DateKey
+
+	column Date
+		dataType: dateTime
+		isUnique
+		formatString: yyyy-mm-dd
+		lineageTag: 6b3bc3b3-6d51-4bc0-a8d1-81582c3e81e9
+		summarizeBy: none
+		sourceColumn: Date
+
+	column 'Fiscal Year'
+		dataType: int64
+		lineageTag: d2cb3d8b-69ed-4d5b-87dd-1eac5fb9028d
+		summarizeBy: none
+		sourceColumn: Fiscal Year
+
+	column 'Fiscal Year Label'
+		dataType: string
+		lineageTag: dda1c5c3-a4c0-4d5c-9bcd-1efcefa46f0b
+		summarizeBy: none
+		sourceColumn: Fiscal Year Label
+
+	column 'Fiscal Month Number'
+		dataType: int64
+		isHidden
+		lineageTag: 6bd25654-ddbc-499d-9b7d-14045e853c94
+		summarizeBy: none
+		sourceColumn: Fiscal Month Number
+
+	column 'Fiscal Quarter'
+		dataType: string
+		lineageTag: 9f042b9e-8cdf-46aa-b00b-0cb5623509fc
+		summarizeBy: none
+		sourceColumn: Fiscal Quarter
+
+	column 'Calendar Year'
+		dataType: int64
+		lineageTag: 446b1d44-5b20-47c3-a69a-ba0bc17a2edb
+		summarizeBy: none
+		sourceColumn: Calendar Year
+
+	column 'Month Number'
+		dataType: int64
+		isHidden
+		lineageTag: 1902840a-d35c-46c0-8d21-df882846fa06
+		summarizeBy: none
+		sourceColumn: Month Number
+
+	column 'Month Short'
+		dataType: string
+		lineageTag: 836f0138-617c-4b54-971d-88537ba496b2
+		summarizeBy: none
+		sourceColumn: Month Short
+		sortByColumn: 'Fiscal Month Number'
+
+	column 'Month Name'
+		dataType: string
+		lineageTag: 2768fcd9-f25e-440d-9ba6-e5dad0f36044
+		summarizeBy: none
+		sourceColumn: Month Name
+		sortByColumn: 'Fiscal Month Number'
+
+	column 'Month Year'
+		dataType: string
+		lineageTag: c68ee0e7-d37e-4325-8330-fca81293f5f0
+		summarizeBy: none
+		sourceColumn: Month Year
+		sortByColumn: 'Month Year Sort'
+
+	column 'Month Year Sort'
+		dataType: int64
+		isHidden
+		lineageTag: d107954d-492c-44a5-b37f-648a0728c6d4
+		summarizeBy: none
+		sourceColumn: Month Year Sort
+
+	column 'Day Of Month'
+		dataType: int64
+		isHidden
+		lineageTag: 3ef13473-115b-47b1-be18-498ea815ee3c
+		summarizeBy: none
+		sourceColumn: Day Of Month
+
+	column 'Day Of Week Short'
+		dataType: string
+		lineageTag: 0f29c2cb-64cf-4821-995b-f285bfeb6076
+		summarizeBy: none
+		sourceColumn: Day Of Week Short
+		sortByColumn: 'Day Of Week Number'
+
+	column 'Day Of Week Number'
+		dataType: int64
+		isHidden
+		lineageTag: a2a92ac6-ccae-4871-92dc-9534f7bf2bea
+		summarizeBy: none
+		sourceColumn: Day Of Week Number
+
+	column 'Is Weekend'
+		dataType: boolean
+		lineageTag: 1765e2aa-d3ef-4aa9-a298-52c251b598d5
+		summarizeBy: none
+		sourceColumn: Is Weekend
+
+	partition DimDate = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\DimDate.parquet"))
+				in
+				    Source
+

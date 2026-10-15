@@ -1,0 +1,127 @@
+/// Contract recipients keyed on Unique Entity Identifier (UEI). Attributes taken from the recipient's latest FY2025 transaction.
+table DimRecipient
+	lineageTag: f85beeda-b2c2-43fa-9017-c3cfedd4f0b3
+
+	column RecipientKey
+		dataType: int64
+		isHidden
+		isKey
+		isAvailableInMdx: false
+		lineageTag: 832655dd-5a2e-429a-9e87-afe6aed39781
+		summarizeBy: none
+		sourceColumn: RecipientKey
+
+	column 'Recipient UEI'
+		dataType: string
+		lineageTag: dffa2bc0-767c-47d3-baa7-f5910c831f88
+		summarizeBy: none
+		sourceColumn: Recipient UEI
+
+	column Recipient
+		dataType: string
+		lineageTag: 55f832ec-2b3e-4a90-8495-8a4ec0b233b2
+		summarizeBy: none
+		sourceColumn: Recipient
+
+	column 'Parent UEI'
+		dataType: string
+		isHidden
+		lineageTag: 5ac987d6-6611-4d12-a024-a1cc530afe06
+		summarizeBy: none
+		sourceColumn: Parent UEI
+
+	column 'Parent Company'
+		dataType: string
+		lineageTag: e234afab-b4bf-4b8d-9b6e-48e322d8ef2c
+		summarizeBy: none
+		sourceColumn: Parent Company
+
+	column 'Recipient Country'
+		dataType: string
+		lineageTag: d1bf52d9-4791-4364-9be9-e530e18edfb3
+		dataCategory: Country
+		summarizeBy: none
+		sourceColumn: Recipient Country
+
+	column 'Recipient State'
+		dataType: string
+		lineageTag: 50e53f20-a456-4d42-9929-f5bb2027d55d
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: Recipient State
+
+	column 'Recipient City'
+		dataType: string
+		lineageTag: 7019215a-b8a7-4e6c-86e0-53d16c7fa91b
+		dataCategory: City
+		summarizeBy: none
+		sourceColumn: Recipient City
+
+	column 'Business Size'
+		dataType: string
+		lineageTag: 45b7ed7d-5436-48fc-978b-1ec040be6d96
+		summarizeBy: none
+		sourceColumn: Business Size
+
+	column 'Woman Owned'
+		dataType: boolean
+		lineageTag: 03377c1b-178e-4651-af9a-f03d6d257375
+		summarizeBy: none
+		sourceColumn: Woman Owned
+
+	column 'Veteran Owned'
+		dataType: boolean
+		lineageTag: c15bcc3b-6db6-4727-8e22-fd953b60d834
+		summarizeBy: none
+		sourceColumn: Veteran Owned
+
+	column 'Service-Disabled Veteran Owned'
+		dataType: boolean
+		lineageTag: c81b79dc-cebb-49f1-8204-069323db5722
+		summarizeBy: none
+		sourceColumn: Service-Disabled Veteran Owned
+
+	column 'Minority Owned'
+		dataType: boolean
+		lineageTag: 8232076f-cba6-43fb-b9f7-54a14f97fcac
+		summarizeBy: none
+		sourceColumn: Minority Owned
+
+	column HUBZone
+		dataType: boolean
+		lineageTag: 00dbdc27-9f6c-406c-8136-a633453d50b5
+		summarizeBy: none
+		sourceColumn: HUBZone
+
+	column '8(a) Participant'
+		dataType: boolean
+		lineageTag: cc98c8c4-3f3a-441c-9b01-6c46295ba809
+		summarizeBy: none
+		sourceColumn: 8(a) Participant
+
+	column Nonprofit
+		dataType: boolean
+		lineageTag: 8ed9c517-348f-4924-b973-6dccfef09011
+		summarizeBy: none
+		sourceColumn: Nonprofit
+
+	column 'Educational Institution'
+		dataType: boolean
+		lineageTag: c2e2b271-a52d-436f-9e96-39f53e420d5e
+		summarizeBy: none
+		sourceColumn: Educational Institution
+
+	column 'Foreign Owned'
+		dataType: boolean
+		lineageTag: 8c63c1e5-e22c-4cfe-832e-4cad1238d2f0
+		summarizeBy: none
+		sourceColumn: Foreign Owned
+
+	partition DimRecipient = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\DimRecipient.parquet"))
+				in
+				    Source
+

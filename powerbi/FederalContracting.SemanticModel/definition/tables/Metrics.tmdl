@@ -1,0 +1,427 @@
+/// Business measures for the Federal Contracting Intelligence report.
+table Metrics
+	lineageTag: 420ae8c0-1718-4fad-bb35-c02a144c6b07
+
+	/// Sum of federal_action_obligation. The only additive money column in the source; net of de-obligations.
+	measure Obligations = SUM ( FactContractTransactions[Obligation] )
+		formatString: \$#,0
+		displayFolder: 01 Core
+		lineageTag: 15eaf2cb-dbe2-4c31-aaab-68ce605ba0c2
+
+	/// Count of contract actions (rows at the transaction grain).
+	measure Transactions = COUNTROWS ( FactContractTransactions )
+		formatString: #,0
+		displayFolder: 01 Core
+		lineageTag: e73397e8-7399-4906-84eb-14b48ec05d90
+
+	/// Distinct contract awards touched by the selected transactions.
+	measure Awards = DISTINCTCOUNT ( FactContractTransactions[AwardKey] )
+		formatString: #,0
+		displayFolder: 01 Core
+		lineageTag: 2eb5760a-607b-4cff-9000-3347377c799d
+
+	/// Distinct recipients (UEI) in context.
+	measure Recipients = DISTINCTCOUNT ( FactContractTransactions[RecipientKey] )
+		formatString: #,0
+		displayFolder: 01 Core
+		lineageTag: b2cd7e91-3503-467a-bc4b-ac4eb2775782
+
+	/// Distinct awarding sub-agencies in context.
+	measure 'Awarding Organisations' = DISTINCTCOUNT ( FactContractTransactions[AgencyKey] )
+		formatString: #,0
+		displayFolder: 01 Core
+		lineageTag: f9b5023e-6234-426b-a33b-c404cfce5657
+
+	/// Obligations divided by number of contract actions.
+	measure 'Average Transaction Value' = DIVIDE ( [Obligations], [Transactions] )
+		formatString: \$#,0
+		displayFolder: 01 Core
+		lineageTag: 02f2cfd1-647c-4af6-9021-b02957ce6e52
+
+	/// Average number of FY2025 contract actions per award.
+	measure 'Actions per Award' = DIVIDE ( [Transactions], [Awards] )
+		formatString: 0.00
+		displayFolder: 01 Core
+		lineageTag: e0e3feb1-bc35-40c9-b57e-fa54e7668ec0
+
+	/// Positive obligation actions only.
+	measure 'New Obligations' = CALCULATE ( [Obligations], FactContractTransactions[Obligation] > 0 )
+		formatString: \$#,0
+		displayFolder: 02 Flow
+		lineageTag: 694e6047-e58c-488a-bcff-019bf2a722e0
+
+	/// Negative obligation actions (terminations, close-outs, corrections). Reported as a negative number.
+	measure De-obligations = CALCULATE ( [Obligations], FactContractTransactions[Obligation] < 0 )
+		formatString: \$#,0
+		displayFolder: 02 Flow
+		lineageTag: 43809bfe-8ad8-4e73-8f7d-cf310b5e3892
+
+	/// De-obligations as a share of positive obligations.
+	measure 'De-obligation Rate' = DIVIDE ( ABS ( [De-obligations] ), [New Obligations] )
+		formatString: 0.0%
+		displayFolder: 02 Flow
+		lineageTag: 1e934ac0-0d2e-4320-adb9-20e843392311
+
+	/// Administrative actions that move no money.
+	measure 'Zero-Dollar Actions' = CALCULATE ( [Transactions], FactContractTransactions[Obligation] = 0 )
+		formatString: #,0
+		displayFolder: 02 Flow
+		lineageTag: 9ed64920-51ab-4ff3-bcbf-55ceab22f92d
+
+	/// Number of single contract actions of $100 million or more.
+	measure 'Large Actions (>= $100M)' = CALCULATE ( [Transactions], FactContractTransactions[Obligation] >= 100000000 )
+		formatString: #,0
+		displayFolder: 02 Flow
+		lineageTag: 8d7d198a-f6e7-412c-80c5-2ecf93f47c85
+
+	/// Obligations carried by single actions of $100 million or more.
+	measure 'Large Action Obligations' = CALCULATE ( [Obligations], FactContractTransactions[Obligation] >= 100000000 )
+		formatString: \$#,0
+		displayFolder: 02 Flow
+		lineageTag: 14b60a96-6578-439e-a4ed-795eafe3a6ea
+
+	/// Share of obligations carried by actions of $100 million or more.
+	measure 'Large Action Share' = DIVIDE ( [Large Action Obligations], [Obligations] )
+		formatString: 0.0%
+		displayFolder: 02 Flow
+		lineageTag: 3a39443b-a1b2-425e-b207-e0af09b3f939
+
+	/// Obligations on actions recorded as competed (full and open, after exclusion of sources, or competed under simplified acquisition procedures).
+	measure 'Competed Obligations' = CALCULATE ( [Obligations], KEEPFILTERS ( DimCompetition[Competition Status] = "Competed" ) )
+		formatString: \$#,0
+		displayFolder: 03 Competition
+		lineageTag: 89617311-da63-4b86-82e9-67431318414b
+
+	/// Competed obligations as a share of all obligations in context.
+	measure 'Competed Share' = DIVIDE ( [Competed Obligations], [Obligations] )
+		formatString: 0.0%
+		displayFolder: 03 Competition
+		lineageTag: c182899e-7520-449c-880c-85d56f173ce0
+
+	/// Obligations on actions carrying any socio-economic set-aside.
+	measure 'Set-Aside Obligations' = CALCULATE ( [Obligations], KEEPFILTERS ( DimCompetition[Set-Aside Flag] = "Set-aside" ) )
+		formatString: \$#,0
+		displayFolder: 03 Competition
+		lineageTag: c9fc0113-00ca-488b-b7cf-bc1631922fba
+
+	measure 'Set-Aside Share' = DIVIDE ( [Set-Aside Obligations], [Obligations] )
+		formatString: 0.0%
+		displayFolder: 03 Competition
+		lineageTag: 8a0028ba-f8f8-406c-9d5f-ae348e11998b
+
+	/// Competed actions that attracted exactly one offer.
+	measure 'Single-Offer Actions' = CALCULATE ( [Transactions], FactContractTransactions[Offers Received] = 1 )
+		formatString: #,0
+		displayFolder: 03 Competition
+		lineageTag: 16f28a2b-c70e-488a-9dc3-93f181140448
+
+	/// Obligations to recipients the contracting officer recorded as a small business.
+	measure 'Small Business Obligations' = CALCULATE ( [Obligations], KEEPFILTERS ( DimRecipient[Business Size] = "SMALL BUSINESS" ) )
+		formatString: \$#,0
+		displayFolder: 04 Market
+		lineageTag: 870f0f3a-8a2d-4033-9113-90616e4e5eba
+
+	measure 'Small Business Share' = DIVIDE ( [Small Business Obligations], [Obligations] )
+		formatString: 0.0%
+		displayFolder: 04 Market
+		lineageTag: 50000e92-0924-40c5-a312-e68a3e4aad54
+
+	measure 'Obligations per Recipient' = DIVIDE ( [Obligations], [Recipients] )
+		formatString: \$#,0
+		displayFolder: 04 Market
+		lineageTag: 4278de8b-e7a7-42b1-a64b-e2646dffc217
+
+	/// Share of the total currently visible on the page, respecting slicers but ignoring the visual's own row context.
+	measure '% of Visible Total' = DIVIDE ( [Obligations], CALCULATE ( [Obligations], ALLSELECTED () ) )
+		formatString: 0.0%
+		displayFolder: 04 Market
+		lineageTag: d4da00fa-fc4c-48d0-b43a-f8026e88de1a
+
+	/// Share of obligations held by the ten largest parent companies in the current filter context.
+	measure 'Top 10 Parent Share' =
+			VAR Total = CALCULATE ( [Obligations], ALLSELECTED ( DimRecipient ) )
+			VAR Top10 =
+			    TOPN (
+			        10,
+			        ALLSELECTED ( DimRecipient[Parent Company] ),
+			        [Obligations], DESC
+			    )
+			VAR TopValue = CALCULATE ( [Obligations], Top10, ALLSELECTED ( DimRecipient ) )
+			RETURN
+			    DIVIDE ( TopValue, Total )
+		formatString: 0.0%
+		displayFolder: 04 Market
+		lineageTag: 556fdba2-bf25-42e2-bef4-4a2a924c85bb
+
+	/// Herfindahl-Hirschman Index over parent-company obligation shares in context, scaled 0-10,000. Above 2,500 indicates high concentration.
+	measure 'Market Concentration (HHI)' =
+			VAR Total = CALCULATE ( [Obligations], ALLSELECTED ( DimRecipient ) )
+			RETURN
+			    SUMX (
+			        VALUES ( DimRecipient[Parent Company] ),
+			        VAR Share = DIVIDE ( [Obligations], Total )
+			        RETURN Share * Share * 10000
+			    )
+		formatString: #,0
+		displayFolder: 04 Market
+		lineageTag: 45d4eeb6-386b-4f27-9222-0dc731070240
+
+	/// Rank of the recipient by obligations within the current page context.
+	measure 'Recipient Rank' =
+			IF (
+			    NOT ISBLANK ( [Obligations] ),
+			    RANKX ( ALLSELECTED ( DimRecipient[Recipient] ), [Obligations], , DESC, DENSE )
+			)
+		formatString: #,0
+		displayFolder: 04 Market
+		lineageTag: dee80faf-ce42-46ff-a1ae-5f290da89835
+
+	/// Obligations attributed to the organisation that provided the money rather than the organisation that ran the procurement.
+	measure 'Obligations (Funding View)' =
+			CALCULATE (
+			    [Obligations],
+			    USERELATIONSHIP ( FactContractTransactions[FundingAgencyKey], DimAgency[AgencyKey] )
+			)
+		formatString: \$#,0
+		displayFolder: 05 Perspective
+		lineageTag: f7e3cb04-a79a-4380-9a36-1f496858a808
+
+	/// Obligations where the awarding organisation is not the funding organisation.
+	measure 'Cross-Serviced Obligations' =
+			CALCULATE (
+			    [Obligations],
+			    FILTER (
+			        FactContractTransactions,
+			        FactContractTransactions[AgencyKey] <> FactContractTransactions[FundingAgencyKey]
+			    )
+			)
+		formatString: \$#,0
+		displayFolder: 05 Perspective
+		lineageTag: 25ef00ca-a20b-41eb-8bfb-e1af9112ae0d
+
+	/// Cumulative obligations from the start of the fiscal year (1 October) to the date in context.
+	measure 'Obligations FYTD' = CALCULATE ( [Obligations], DATESYTD ( DimDate[Date], "09/30" ) )
+		formatString: \$#,0
+		displayFolder: 06 Time
+		lineageTag: 3fb2198c-837a-4efd-b240-f005ecec450d
+
+	/// Obligations recorded in fiscal Q4 (July-September).
+	measure 'Obligations in Final Quarter' = CALCULATE ( [Obligations], KEEPFILTERS ( DimDate[Fiscal Quarter] = "Q4" ) )
+		formatString: \$#,0
+		displayFolder: 06 Time
+		lineageTag: 503db433-2be8-443e-a589-4889786e3cbd
+
+	/// Share of the year's obligations placed in the final fiscal quarter.
+	measure 'Final Quarter Share' = DIVIDE ( [Obligations in Final Quarter], CALCULATE ( [Obligations], ALL ( DimDate ) ) )
+		formatString: 0.0%
+		displayFolder: 06 Time
+		lineageTag: a087dc70-c8fa-45cb-ad42-815e1ea30f99
+
+	/// Obligations recorded in the last month of the fiscal year.
+	measure 'Obligations in September' = CALCULATE ( [Obligations], KEEPFILTERS ( DimDate[Fiscal Month Number] = 12 ) )
+		formatString: \$#,0
+		displayFolder: 06 Time
+		lineageTag: 83ea5929-4510-4630-b01e-84d414e23c82
+
+	measure 'September Share' = DIVIDE ( [Obligations in September], CALCULATE ( [Obligations], ALL ( DimDate ) ) )
+		formatString: 0.0%
+		displayFolder: 06 Time
+		lineageTag: 78f607cd-076f-4884-9a84-30343fd8269f
+
+	/// Contract actions where FPDS records a number of offers received. Only 32% of actions carry this field.
+	measure 'Actions with Recorded Offers' = CALCULATE ( [Transactions], NOT ISBLANK ( FactContractTransactions[Offers Received] ) )
+		formatString: #,0
+		displayFolder: 03 Competition
+		lineageTag: 6b250706-f6bd-464f-9ee3-8e098a08df21
+
+	/// Share of actions with a recorded offer count that attracted exactly one offer. A competition-quality signal that is robust to the 999-offer bulk-reporting pattern in FPDS.
+	measure 'Single-Offer Share' = DIVIDE ( [Single-Offer Actions], [Actions with Recorded Offers] )
+		formatString: 0.0%
+		displayFolder: 03 Competition
+		lineageTag: 9622a19b-e732-414a-8603-cc71d010a81c
+
+	/// Presentation helper: obligations, returned only for the eight largest departments. RANKX iterates ALLSELECTED(DimAgency[Agency Short]) - the same column the chart groups by, otherwise every row ranks first.
+	measure 'Obligations · Top 8 Departments' =
+			VAR Rnk = RANKX ( ALLSELECTED ( DimAgency[Agency Short] ), [Obligations], , DESC, DENSE )
+			RETURN
+			    IF ( Rnk <= 8, [Obligations] )
+		formatString: \$#,0
+		displayFolder: 09 Presentation (ranked)
+		lineageTag: ddb86d57-911c-4f60-a93e-62328b66b6cf
+
+	/// Presentation helper. Ranks over DimAgency[Sub-Agency] - the same column the chart groups by.
+	measure 'Obligations · Top 10 Sub-Agencies' =
+			VAR Rnk = RANKX ( ALLSELECTED ( DimAgency[Sub-Agency] ), [Obligations], , DESC, DENSE )
+			RETURN
+			    IF ( Rnk <= 10, [Obligations] )
+		formatString: \$#,0
+		displayFolder: 09 Presentation (ranked)
+		lineageTag: 05174c57-23a2-4f43-ad0e-90a11fc8a11a
+
+	measure 'Obligations · Top 10 Parents' =
+			VAR Rnk = RANKX ( ALLSELECTED ( DimRecipient[Parent Company] ), [Obligations], , DESC, DENSE )
+			RETURN
+			    IF ( Rnk <= 10, [Obligations] )
+		formatString: \$#,0
+		displayFolder: 09 Presentation (ranked)
+		lineageTag: a251c6c1-938c-4be5-b6d0-b150ea21a771
+
+	measure 'Obligations · Top 10 Recipients' =
+			VAR Rnk = RANKX ( ALLSELECTED ( DimRecipient[Recipient] ), [Obligations], , DESC, DENSE )
+			RETURN
+			    IF ( Rnk <= 10, [Obligations] )
+		formatString: \$#,0
+		displayFolder: 09 Presentation (ranked)
+		lineageTag: 0b407d9c-7695-40fd-8ff5-45399e473db3
+
+	/// Presentation helper. Ranks over DimPsc[PSC Description] - the same column the chart groups by.
+	measure 'Obligations · Top 12 Categories' =
+			VAR Rnk = RANKX ( ALLSELECTED ( DimPsc[PSC Description] ), [Obligations], , DESC, DENSE )
+			RETURN
+			    IF ( Rnk <= 12, [Obligations] )
+		formatString: \$#,0
+		displayFolder: 09 Presentation (ranked)
+		lineageTag: fd4fc361-7c22-439e-866a-58305127b8a7
+
+	measure 'Obligations · Top 12 Industries' =
+			VAR Rnk = RANKX ( ALLSELECTED ( DimNaics[NAICS Code & Industry] ), [Obligations], , DESC, DENSE )
+			RETURN
+			    IF ( Rnk <= 12, [Obligations] )
+		formatString: \$#,0
+		displayFolder: 09 Presentation (ranked)
+		lineageTag: ef05a4a9-dab0-45e8-b141-8c759b7a3036
+
+	measure 'Obligations · Top 12 States' =
+			VAR Rnk = RANKX ( ALLSELECTED ( DimPlaceOfPerformance[Performance State] ), [Obligations], , DESC, DENSE )
+			RETURN
+			    IF ( Rnk <= 12, [Obligations] )
+		formatString: \$#,0
+		displayFolder: 09 Presentation (ranked)
+		lineageTag: e2ee93f3-38a1-48e5-9e6c-31bb761bec78
+
+	/// Deep link to the award record on USAspending.gov. Built from the award key at query time - the URL is deterministic, so storing it per award would cost 445 MB of dictionary text for no analytical gain.
+	measure 'USAspending Link' =
+			VAR AwardUrlKey = SELECTEDVALUE ( DimAward[Award Unique Key] )
+			RETURN
+			    IF ( NOT ISBLANK ( AwardUrlKey ), "https://www.usaspending.gov/award/" & AwardUrlKey & "/" )
+		displayFolder: 07 Provenance
+		lineageTag: 70cb4895-fdb1-4e84-8278-d9ffc5e3788d
+		dataCategory: WebUrl
+
+	/// Presentation helper: obligations for the eight largest parent companies in context. Eight rather than ten so the ranked bar chart renders every category without a scrollbar at executive-page height.
+	measure 'Obligations · Top 8 Parents' =
+			VAR Rnk = RANKX ( ALLSELECTED ( DimRecipient[Parent Company] ), [Obligations], , DESC, DENSE )
+			RETURN
+			    IF ( Rnk <= 8, [Obligations] )
+		formatString: \$#,0
+		displayFolder: 09 Presentation (ranked)
+		lineageTag: c0751916-70a1-448a-a4b2-b54fcf38ed83
+
+	/// Obligations placed on base (new) contract actions.
+	measure 'Base Award Obligations' = CALCULATE ( [Obligations], KEEPFILTERS ( DimActionType[Action Class] = "Base award" ) )
+		formatString: \$#,0
+		displayFolder: 02 Flow
+		lineageTag: 14570b11-1b88-498d-98cc-723de1078a9f
+
+	/// Obligations placed on actions against contracts that already existed - funding actions, option exercises, scope modifications, administrative actions and terminations.
+	measure 'Modification Obligations' = CALCULATE ( [Obligations], KEEPFILTERS ( DimActionType[Action Class] <> "Base award" ) )
+		formatString: \$#,0
+		displayFolder: 02 Flow
+		lineageTag: 1e13ee95-30a5-4126-91bc-65e47620f1d7
+
+	measure 'Modification Share' = DIVIDE ( [Modification Obligations], [Obligations] )
+		formatString: 0.0%
+		displayFolder: 02 Flow
+		lineageTag: 3f9bb9b1-d508-4780-951d-183b7aec9210
+
+	/// Obligations on indefinite delivery vehicles rather than on awards.
+	measure 'IDV Obligations' = CALCULATE ( [Obligations], KEEPFILTERS ( DimContractType[Award or IDV] = "IDV" ) )
+		formatString: \$#,0
+		displayFolder: 02 Flow
+		lineageTag: 333357ae-bcfc-4f03-a9ff-04a03a69e2be
+
+	measure 'US Obligations' = CALCULATE ( [Obligations], KEEPFILTERS ( DimPlaceOfPerformance[Performance Region] = "United States" ) )
+		formatString: \$#,0
+		displayFolder: 08 Geography
+		lineageTag: dcc14fc1-de78-44fd-b54c-80b0ce413b25
+
+	/// Obligations where the recorded place of performance is outside the United States.
+	measure 'Foreign Obligations' = CALCULATE ( [Obligations], KEEPFILTERS ( DimPlaceOfPerformance[Performance Region] = "Outside the United States" ) )
+		formatString: \$#,0
+		displayFolder: 08 Geography
+		lineageTag: d4fc72ed-a4bf-4ebe-a6a5-92d973b4829b
+
+	measure 'Foreign Share' = DIVIDE ( [Foreign Obligations], [Obligations] )
+		formatString: 0.0%
+		displayFolder: 08 Geography
+		lineageTag: 0402fe66-38de-4d58-8743-e56b1bc55ed0
+
+	/// Distinct U.S. states and territories with a recorded place of performance.
+	measure 'Performance States' =
+			CALCULATE (
+			    DISTINCTCOUNT ( DimPlaceOfPerformance[Performance State] ),
+			    KEEPFILTERS ( DimPlaceOfPerformance[Performance Country] = "USA" )
+			)
+		formatString: #,0
+		displayFolder: 08 Geography
+		lineageTag: 8149b249-2a55-4464-b72e-7bf7e24bcc6a
+
+	/// Distinct congressional districts with a recorded place of performance.
+	measure 'Performance Districts' =
+			CALCULATE (
+			    DISTINCTCOUNT ( DimPlaceOfPerformance[Performance Congressional District] ),
+			    KEEPFILTERS ( DimPlaceOfPerformance[Performance Country] = "USA" )
+			)
+		formatString: #,0
+		displayFolder: 08 Geography
+		lineageTag: a078cff2-ce3a-4ff3-8b9c-357064ad2e7d
+
+	measure 'Obligations · Top 8 Set-Asides' =
+			VAR Rnk = RANKX ( ALLSELECTED ( DimCompetition[Set-Aside Type] ), [Obligations], , DESC, DENSE )
+			RETURN
+			    IF ( Rnk <= 8, [Obligations] )
+		formatString: \$#,0
+		displayFolder: 09 Presentation (ranked)
+		lineageTag: 1a4b4227-f4cf-467d-aafc-7f79f2c79c2c
+
+	measure 'Obligations · Top 8 Countries' =
+			VAR Rnk = RANKX ( ALLSELECTED ( DimPlaceOfPerformance[Performance Country] ), [Obligations], , DESC, DENSE )
+			RETURN
+			    IF ( Rnk <= 8, [Obligations] )
+		formatString: \$#,0
+		displayFolder: 09 Presentation (ranked)
+		lineageTag: f75dea25-9ff8-4c68-9bbf-ea4586fc5ed7
+
+	measure 'Obligations · Top 8 Sectors' =
+			VAR Rnk = RANKX ( ALLSELECTED ( DimNaics[NAICS Sector] ), [Obligations], , DESC, DENSE )
+			RETURN
+			    IF ( Rnk <= 8, [Obligations] )
+		formatString: \$#,0
+		displayFolder: 09 Presentation (ranked)
+		lineageTag: 0bc97c8a-d2db-43ed-9c58-942beb098302
+
+	measure 'Obligations · Top 6 Competition Types' =
+			VAR Rnk = RANKX ( ALLSELECTED ( DimCompetition[Extent Competed] ), [Obligations], , DESC, DENSE )
+			RETURN
+			    IF ( Rnk <= 6, [Obligations] )
+		formatString: \$#,0
+		displayFolder: 09 Presentation (ranked)
+		lineageTag: 24c7ad59-964f-4a15-8080-3e437395de8a
+
+	measure 'Obligations · Top 8 States' =
+			VAR Rnk = RANKX ( ALLSELECTED ( DimPlaceOfPerformance[Performance State] ), [Obligations], , DESC, DENSE )
+			RETURN
+			    IF ( Rnk <= 8, [Obligations] )
+		formatString: \$#,0
+		displayFolder: 09 Presentation (ranked)
+		lineageTag: c990d78a-70a7-4736-b8ea-6d6222f21dc6
+
+	column Value
+		lineageTag: cb68e996-299d-47e6-8aba-46513c8a82db
+		isNameInferred
+		sourceColumn: [Value]
+
+	partition Metrics = calculated
+		mode: import
+		source = { BLANK() }
+

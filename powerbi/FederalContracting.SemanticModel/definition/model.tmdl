@@ -1,0 +1,26 @@
+model FederalContractingIntelligence
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_ProTooling = ["MCP-PBIModeling","DevMode"]
+
+annotation PBI_QueryOrder = ["DimDate","DimAgency","DimRecipient","DimNaics","DimPsc","DimCompetition","DimContractType","DimActionType","DimPlaceOfPerformance","DimActionSize","DataFolder"]
+
+ref table DimDate
+ref table DimAgency
+ref table DimRecipient
+ref table DimNaics
+ref table DimPsc
+ref table DimCompetition
+ref table DimContractType
+ref table DimActionType
+ref table DimPlaceOfPerformance
+ref table DimAward
+ref table FactContractTransactions
+ref table Metrics
+ref table DimActionSize
+

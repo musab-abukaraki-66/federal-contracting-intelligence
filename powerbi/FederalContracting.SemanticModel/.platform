@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "FederalContracting"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "7c1f2a90-0c3b-4c7e-9d21-2f6a51b0e401"
+  }
+}

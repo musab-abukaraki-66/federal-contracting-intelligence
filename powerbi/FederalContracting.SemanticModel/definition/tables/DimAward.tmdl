@@ -1,0 +1,103 @@
+/// Contract awards. Ceiling values are those recorded on the award's latest FY2025 transaction.
+table DimAward
+	lineageTag: 64b816cf-9413-4e47-a753-d3a784d04d97
+
+	column AwardKey
+		dataType: int64
+		isHidden
+		isKey
+		isAvailableInMdx: false
+		lineageTag: 96889569-6f03-4b26-b86d-029b73f449cb
+		summarizeBy: none
+		sourceColumn: AwardKey
+
+	column 'Award Unique Key'
+		dataType: string
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: 84c2628a-de58-4784-bd4b-4379d3f6f510
+		summarizeBy: none
+		sourceColumn: Award Unique Key
+
+	column 'Award PIID'
+		dataType: string
+		isAvailableInMdx: false
+		lineageTag: 685d8189-3c0e-4729-a924-74b8321b8a07
+		summarizeBy: none
+		sourceColumn: Award PIID
+
+	column 'Parent Award PIID'
+		dataType: string
+		lineageTag: 6a8d2e5a-58aa-43e0-95f2-cf9b6d8fb3fc
+		summarizeBy: none
+		sourceColumn: Parent Award PIID
+
+	column 'Award or IDV'
+		dataType: string
+		isHidden
+		lineageTag: 22a93cf6-f066-47a2-91e8-bcc2e81674da
+		summarizeBy: none
+		sourceColumn: Award or IDV
+
+	column 'Award Current Value'
+		dataType: decimal
+		formatString: \$#,0
+		isAvailableInMdx: false
+		lineageTag: 5b260d2b-a556-4f21-95b2-7b682377fbc6
+		summarizeBy: sum
+		sourceColumn: Award Current Value
+
+	column 'Award Potential Value'
+		dataType: decimal
+		formatString: \$#,0
+		isAvailableInMdx: false
+		lineageTag: 98771e9d-5bd6-4741-b2d5-3d951609bd47
+		summarizeBy: sum
+		sourceColumn: Award Potential Value
+
+	column 'Performance Start'
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 18b5fe50-4a46-4e1b-90f0-4e3804a38117
+		summarizeBy: none
+		sourceColumn: Performance Start
+
+	column 'Performance End'
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 3304703a-48e5-4ac2-9485-620a05dc911f
+		summarizeBy: none
+		sourceColumn: Performance End
+
+	partition 'Award p1' = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\DimAward\part_01.parquet"))
+				in
+				    Source
+
+	partition 'Award p2' = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\DimAward\part_02.parquet"))
+				in
+				    Source
+
+	partition 'Award p3' = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\DimAward\part_03.parquet"))
+				in
+				    Source
+
+	partition 'Award p4' = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "\DimAward\part_04.parquet"))
+				in
+				    Source
+
